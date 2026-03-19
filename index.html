@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diamond Dice — Baseball Card &amp; Dice Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div id="phase-setup" class="phase">
+    <div class="setup-card">
+      <div class="logo">
+        <span class="logo-diamond">◆</span>
+        <h1>Diamond Dice</h1>
+        <p class="logo-sub">A Baseball Card &amp; Dice Game</p>
+      </div>
+      <form id="setup-form">
+        <div class="field-group">
+          <label for="team1-name">Visiting Team</label>
+          <input type="text" id="team1-name" placeholder="e.g. Murderers' Row" maxlength="30" autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label for="team2-name">Home Team</label>
+          <input type="text" id="team2-name" placeholder="e.g. The Boys of Summer" maxlength="30" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-large" id="setup-submit">Build the Pool →</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="phase-pool" class="phase hidden">
+    <header class="phase-header">
+      <div class="header-logo">◆ Diamond Dice</div>
+      <div class="header-title">Build the Player Pool</div>
+      <div class="header-meta" id="pool-counts">0 batters · 0 pitchers</div>
+    </header>
+    <div class="pool-layout">
+      <aside class="pool-form-panel">
+        <h2>Add a Player</h2>
+        <form id="add-player-form">
+          <div class="field-group">
+            <label for="player-name">Name</label>
+            <input type="text" id="player-name" placeholder="e.g. Babe Ruth" maxlength="40" autocomplete="off" />
+          </div>
+          <div class="field-group">
+            <label>Type</label>
+            <div class="toggle-group">
+              <button type="button" class="toggle-btn active" data-type="batter">Batter</button>
+              <button type="button" class="toggle-btn" data-type="pitcher">Pitcher</button>
+              <button type="button" class="toggle-btn" data-type="twoway">⚡ Two-Way</button>
+            </div>
+            <input type="hidden" id="player-type" value="batter" />
+          </div>
+          <div id="batter-attrs">
+            <div class="field-group">
+              <label>Position(s)</label>
+              <div class="position-chips" id="position-chips">
+                <button type="button" class="pos-chip" data-pos="C">C</button>
+                <button type="button" class="pos-chip" data-pos="1B">1B</button>
+                <button type="button" class="pos-chip" data-pos="2B">2B</button>
+                <button type="button" class="pos-chip" data-pos="3B">3B</button>
+                <button type="button" class="pos-chip" data-pos="SS">SS</button>
+                <button type="button" class="pos-chip" data-pos="LF">LF</button>
+                <button type="button" class="pos-chip" data-pos="CF">CF</button>
+                <button type="button" class="pos-chip" data-pos="RF">RF</button>
+                <button type="button" class="pos-chip" data-pos="DH">DH</button>
+              </div>
+            </div>
+            <div class="attr-row">
+              <div class="field-group">
+                <label for="attr-contact">Contact</label>
+                <select id="attr-contact">
+                  <option value="A">A (.300+)</option>
+                  <option value="B" selected>B (.270–.299)</option>
+                  <option value="C">C (.240–.269)</option>
+                  <option value="D">D (below .240)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="attr-power">Power</label>
+                <select id="attr-power">
+                  <option value="A">A (30+ HR)</option>
+                  <option value="B" selected>B (15–29 HR)</option>
+                  <option value="C">C (5–14 HR)</option>
+                  <option value="D">D (under 5 HR)</option>
+                </select>
+              </div>
+            </div>
+            <div class="attr-row">
+              <div class="field-group">
+                <label for="attr-speed">Speed</label>
+                <select id="attr-speed">
+                  <option value="A">A (30+ SB)</option>
+                  <option value="B" selected>B (10–29 SB)</option>
+                  <option value="C">C (1–9 SB)</option>
+                  <option value="D">D (0 SB)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="attr-fielding">Fielding</label>
+                <select id="attr-fielding">
+                  <option value="A">A (GG / .995+)</option>
+                  <option value="B" selected>B (.980–.994)</option>
+                  <option value="C">C (.960–.979)</option>
+                  <option value="D">D (below .960)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="pitcher-attrs" class="hidden">
+            <div class="attr-row">
+              <div class="field-group">
+                <label for="attr-pitching">Pitching (ERA)</label>
+                <select id="attr-pitching">
+                  <option value="A">A (under 2.50)</option>
+                  <option value="B" selected>B (2.50–3.49)</option>
+                  <option value="C">C (3.50–4.49)</option>
+                  <option value="D">D (4.50+)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="attr-stamina">Role / Stamina</label>
+                <select id="attr-stamina">
+                  <option value="ace">Ace (7 inn)</option>
+                  <option value="midsp" selected>Mid SP (5 inn)</option>
+                  <option value="longrp">Long RP (3 inn)</option>
+                  <option value="closer">Closer (1 inn)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="add-player-btn">Add to Pool</button>
+        </form>
+        <div class="sample-players-bar">
+          <span class="sample-players-label">Want to test quickly?</span>
+          <button class="btn btn-ghost btn-sm" id="load-sample-btn">⚾ Load Classic Players</button>
+        </div>
+        <div class="pool-requirements" id="pool-requirements">
+          <h3>Requirements to Start Draft</h3>
+          <div class="req-item" id="req-batters"><span class="req-icon">○</span> At least 20 batters</div>
+          <div class="req-item" id="req-pitchers"><span class="req-icon">○</span> At least 6 pitchers</div>
+          <div class="req-item" id="req-positions"><span class="req-icon">○</span> 2+ players per field position</div>
+        </div>
+        <button class="btn btn-success btn-large" id="start-draft-btn" disabled>Start Draft ⚾</button>
+      </aside>
+      <main class="pool-list-panel">
+        <div class="pool-list-header">
+          <h2>Player Pool</h2>
+          <div class="pool-filter">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="batter">Batters</button>
+            <button class="filter-btn" data-filter="pitcher">Pitchers</button>
+          </div>
+        </div>
+        <div id="pool-list" class="player-list"><div class="empty-state">No players added yet.</div></div>
+      </main>
+    </div>
+  </div>
+
+  <div id="phase-draft" class="phase hidden">
+    <header class="phase-header">
+      <div class="header-logo">◆ Diamond Dice</div>
+      <div class="header-title" id="draft-pick-label">Pick 1</div>
+      <div class="header-meta" id="draft-turn-label"></div>
+      <button class="btn btn-ghost btn-sm autodraft-btn" id="auto-draft-btn">⚡ Auto-Draft</button>
+    </header>
+    <div class="draft-layout">
+      <aside class="team-panel team-panel--left" id="team1-panel">
+        <div class="team-panel-header" id="team1-panel-header"></div>
+        <div class="roster-section"><h3>Batting Order</h3><ol class="roster-list" id="team1-batters"></ol></div>
+        <div class="roster-section"><h3>Pitching Staff</h3><ul class="roster-list" id="team1-pitchers"></ul></div>
+        <div class="roster-needs" id="team1-needs"></div>
+      </aside>
+      <main class="draft-pool-panel">
+        <div class="draft-pool-header">
+          <div class="draft-pool-header-top">
+            <h2>Available Players</h2>
+            <div class="pool-filter">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="batter">Batters</button>
+              <button class="filter-btn" data-filter="pitcher">Pitchers</button>
+            </div>
+          </div>
+          <div class="draft-pos-filter hidden" id="draft-pos-filter">
+            <span class="pos-filter-label">Position:</span>
+            <button class="filter-btn filter-btn--sm active" data-pos="all">All</button>
+            <button class="filter-btn filter-btn--sm" data-pos="C">C</button>
+            <button class="filter-btn filter-btn--sm" data-pos="1B">1B</button>
+            <button class="filter-btn filter-btn--sm" data-pos="2B">2B</button>
+            <button class="filter-btn filter-btn--sm" data-pos="3B">3B</button>
+            <button class="filter-btn filter-btn--sm" data-pos="SS">SS</button>
+            <button class="filter-btn filter-btn--sm" data-pos="LF">LF</button>
+            <button class="filter-btn filter-btn--sm" data-pos="CF">CF</button>
+            <button class="filter-btn filter-btn--sm" data-pos="RF">RF</button>
+            <button class="filter-btn filter-btn--sm" data-pos="DH">DH</button>
+          </div>
+        </div>
+        <div id="draft-pool-list" class="player-list"></div>
+      </main>
+      <aside class="team-panel team-panel--right" id="team2-panel">
+        <div class="team-panel-header" id="team2-panel-header"></div>
+        <div class="roster-section"><h3>Batting Order</h3><ol class="roster-list" id="team2-batters"></ol></div>
+        <div class="roster-section"><h3>Pitching Staff</h3><ul class="roster-list" id="team2-pitchers"></ul></div>
+        <div class="roster-needs" id="team2-needs"></div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="phase-lineup" class="phase hidden">
+    <header class="phase-header">
+      <div class="header-logo">◆ Diamond Dice</div>
+      <div class="header-title" id="lineup-phase-label">Set Your Lineup</div>
+      <div class="header-meta" id="lineup-team-label"></div>
+      <button class="btn btn-ghost btn-sm autodraft-btn" id="auto-lineup-btn">⚡ Auto-Lineup</button>
+    </header>
+    <div class="lineup-layout">
+      <div class="lineup-instructions"><p id="lineup-instructions-text"></p></div>
+      <div class="lineup-panels">
+        <section class="lineup-section">
+          <h2>Batting Order</h2>
+          <p class="section-hint">Click a player, then click a slot to assign them.</p>
+          <div class="lineup-columns">
+            <div class="lineup-order" id="lineup-order"></div>
+            <div class="lineup-bench" id="lineup-bench"></div>
+          </div>
+          <div class="lineup-coverage" id="lineup-coverage"></div>
+        </section>
+        <section class="lineup-section">
+          <h2>Pitching Staff</h2>
+          <p class="section-hint">Designate your starter and set the bullpen order.</p>
+          <div id="lineup-pitching"></div>
+        </section>
+      </div>
+      <button class="btn btn-primary btn-large" id="lineup-confirm-btn" disabled>Confirm Lineup →</button>
+    </div>
+  </div>
+
+  <div id="phase-game" class="phase hidden">
+    <header class="phase-header">
+      <div class="header-logo">◆ Diamond Dice</div>
+      <div class="header-title">Play Ball!</div>
+    </header>
+    <div id="game-root"></div>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script src="js/sample-players.js"></script>
+  <script src="js/draft.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
