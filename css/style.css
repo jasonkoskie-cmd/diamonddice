@@ -1,0 +1,1986 @@
+/* ═══════════════════════════════════════════
+   Diamond Dice — Vintage Baseball Theme
+   Fonts: Playfair Display · Oswald · Special Elite
+═══════════════════════════════════════════ */
+
+/* ▪▪▪ Design Tokens ▪▪▪ */
+:root {
+  /* Greens */
+  --green-dark:     #1a3f0a;
+  --green-field:    #265c14;
+  --green-grass:    #336b1c;
+  --green-light:    #4a8a28;
+  --green-mow:      #2f6018;   /* alternating mow stripe base */
+
+  /* Parchment / Paper */
+  --parchment:      #f2e8cc;
+  --parchment-mid:  #e8d8b0;
+  --parchment-dark: #d4c090;
+  --card-bg:        #faf4e0;
+
+  /* Leather / Wood / Dirt */
+  --brown:          #5c2e0a;
+  --brown-light:    #8b4a1a;
+  --dirt:           #c4935a;
+  --dirt-light:     #ddb888;
+  --wood:           #7a4820;
+
+  /* Reds */
+  --red:            #9e1c1c;
+  --red-light:      #c0302a;
+  --stitching:      #b82020;
+
+  /* Navy */
+  --navy:           #18244a;
+  --navy-light:     #223070;
+  --navy-faint:     #1c2a55;
+
+  /* Gold / Brass */
+  --gold:           #b8832a;
+  --gold-light:     #d4a84a;
+  --gold-pale:      #f0d898;
+
+  /* Text */
+  --text:           #1e1208;
+  --text-mid:       #4a3520;
+  --text-muted:     #7a6040;
+
+  /* Chalk / White */
+  --chalk:          #f8f2e0;
+  --white:          #ffffff;
+  --gray-100:       #f0e8d8;
+  --gray-200:       #ddd0b8;
+  --gray-400:       #a89878;
+  --gray-600:       #786040;
+
+  /* Radii & Shadows */
+  --radius-sm:      4px;
+  --radius-md:      8px;
+  --radius-lg:      14px;
+  --shadow-sm:      0 2px 4px rgba(0,0,0,.2);
+  --shadow-md:      0 4px 14px rgba(0,0,0,.3);
+  --shadow-lg:      0 8px 32px rgba(0,0,0,.4);
+  --shadow-inset:   inset 0 1px 3px rgba(0,0,0,.25);
+
+  /* Fonts */
+  --font-display:   'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-ui:        'Oswald', 'Arial Narrow', sans-serif;
+  --font-card:      'Special Elite', 'Courier New', monospace;
+}
+
+/* ▪▪ Reset ▪▪ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--green-dark);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ▪▪ Utility ▪▪ */
+.hidden {
+  display: none !important;
+}
+
+/* ▪▪ Phase shell ▪▪ */
+.phase {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100vw;   /* never wider than the viewport */
+  overflow-x: hidden;  /* each phase clips its own horizontal overflow */
+}
+
+/* ▪▪ Pinstripe texture mixin (applied via class or background) ▪▪ */
+.pinstripe-bg {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,.04) 28px, rgba(255,255,255,.04) 29px
+    );
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PHASE HEADER (shared)
+═════════════════════════════════════════════════════════════════════ */
+
+.phase-header {
+  background: var(--navy);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,.035) 28px, rgba(255,255,255,.035) 29px
+    );
+  border-bottom: 3px solid var(--gold);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  overflow: hidden;   /* clip any flex-child overflow inside the header bar */
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+
+.header-logo {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--gold-light);
+  font-weight: 700;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.phase-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.game-nav-button {
+  font-size: .7rem;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gold);
+  background: rgba(24, 36, 74, .3);
+  border: 1px solid var(--gold);
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all .15s ease-in-out;
+}
+
+.game-nav-button:hover {
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 900;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PHASES: Setup
+═════════════════════════════════════════════════════════════════════ */
+
+.setup-phase {
+  background: var(--green-dark);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.setup-header {
+  background: linear-gradient(90deg, var(--navy), var(--navy-light));
+  border-bottom: 2px solid var(--gold);
+  padding: 8px 16px;
+  color: var(--chalk);
+}
+
+.setup-header h2 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Game setup panel */
+.setup-main {
+  flex: 1;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.setup-section {
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.setup-section h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PHASES: Pool
+═════════════════════════════════════════════════════════════════════ */
+
+.pool-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  flex: 1;
+  min-height: 0;  /* allow flex child to shrink below content height */
+  overflow: hidden;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Team panels */
+.team-panel {
+  min-width: 0;
+  background: var(--card-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.team-panel--left  {
+  border-right: 1px solid var(--parchment-dark);
+  box-shadow: 2px 0 6px rgba(0,0,0,.08);
+}
+
+.team-panel--right {
+  border-left:  1px solid var(--parchment-dark);
+  box-shadow: -2px 0 6px rgba(0,0,0,.08);
+}
+
+.team-panel.active-turn {
+  background: #fffbe8;
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+
+.team-panel-header {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--gold);
+  text-align: center;
+}
+
+.team-panel-header .pick-indicator {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-top: 3px;
+}
+
+.pick-indicator.your-turn {
+  color: var(--red);
+}
+
+.pick-indicator.waiting   {
+  color: var(--gray-400);
+}
+
+.roster-section h3 {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.roster-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0;
+}
+
+.roster-slot {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: var(--parchment-mid);
+  color: var(--text-muted);
+  border: 1px dashed var(--parchment-dark);
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.roster-slot.filled {
+  background: var(--chalk);
+  border: 1px solid var(--parchment-dark);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.slot-badges {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.roster-needs {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+  background: var(--parchment-mid);
+  border-radius: 3px;
+  padding: 7px;
+  margin-top: auto;
+  line-height: 1.6;
+}
+
+.roster-needs strong {
+  color: var(--navy);
+  font-family: var(--font-ui);
+}
+
+.need-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: .62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin: 2px 2px 0 0;
+}
+
+.need-chip.met {
+  background: var(--green-field);
+}
+
+/* Draft pool center */
+.draft-pool-panel {
+  min-width: 0;
+  padding: 14px 24px 14px 14px;  /* extra right padding protects content at right edge */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2-column card grid in the draft pool */
+.draft-pool-panel .player-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  align-items: start;
+}
+
+/* Pick bar and empty state always span both columns */
+.draft-pool-panel .player-list .draft-pick-bar,
+.draft-pool-panel .player-list .empty-state {
+  grid-column: 1 / -1;
+}
+
+.draft-pool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.draft-pool-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.draft-pool-header h2 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 700;
+  margin: 0;
+}
+
+.draft-pick-bar {
+  background: var(--navy);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-card);
+  font-size: .88rem;
+  color: var(--chalk);
+  text-align: center;
+}
+
+.draft-pick-bar.your-pick {
+  background: var(--red);
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PHASES: Draft
+═════════════════════════════════════════════════════════════════════ */
+
+.draft-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr) 210px;
+  flex: 1;
+  min-height: 0;    /* allow flex child to shrink below content height */
+  overflow: hidden;  /* constrain grid height so panels scroll via overflow-y: auto */
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Team panels */
+.team-panel {
+  min-width: 0;
+  background: var(--card-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.team-panel--left  {
+  border-right: 1px solid var(--parchment-dark);
+  box-shadow: 2px 0 6px rgba(0,0,0,.08);
+}
+
+.team-panel--right {
+  border-left:  1px solid var(--parchment-dark);
+  box-shadow: -2px 0 6px rgba(0,0,0,.08);
+}
+
+.team-panel.active-turn {
+  background: #fffbe8;
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+
+.team-panel-header {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--gold);
+  text-align: center;
+}
+
+.team-panel-header .pick-indicator {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-top: 3px;
+}
+
+.pick-indicator.your-turn {
+  color: var(--red);
+}
+
+.pick-indicator.waiting   {
+  color: var(--gray-400);
+}
+
+.roster-section h3 {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.roster-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0;
+}
+
+.roster-slot {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: var(--parchment-mid);
+  color: var(--text-muted);
+  border: 1px dashed var(--parchment-dark);
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.roster-slot.filled {
+  background: var(--chalk);
+  border: 1px solid var(--parchment-dark);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.slot-badges {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.roster-needs {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+  background: var(--parchment-mid);
+  border-radius: 3px;
+  padding: 7px;
+  margin-top: auto;
+  line-height: 1.6;
+}
+
+.roster-needs strong {
+  color: var(--navy);
+  font-family: var(--font-ui);
+}
+
+.need-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: .62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin: 2px 2px 0 0;
+}
+
+.need-chip.met {
+  background: var(--green-field);
+}
+
+/* Draft pool center */
+.draft-pool-panel {
+  min-width: 0;
+  padding: 14px 24px 14px 14px;  /* extra right padding protects content at right edge */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2-column card grid in the draft pool */
+.draft-pool-panel .player-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  align-items: start;
+}
+
+/* Pick bar and empty state always span both columns */
+.draft-pool-panel .player-list .draft-pick-bar,
+.draft-pool-panel .player-list .empty-state {
+  grid-column: 1 / -1;
+}
+
+.draft-pool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.draft-pool-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.draft-pool-header h2 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 700;
+  margin: 0;
+}
+
+.draft-pick-bar {
+  background: var(--navy);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-card);
+  font-size: .88rem;
+  color: var(--chalk);
+  text-align: center;
+}
+
+.draft-pick-bar.your-pick {
+  background: var(--red);
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Player cards */
+.player-card {
+  font-family: var(--font-card);
+  font-size: .88rem;
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--parchment-dark);
+  box-shadow: var(--shadow-inset);
+}
+
+.modifier-row strong {
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+}
+
+.mod-pos {
+  color: var(--green-field);
+}
+
+.mod-neg {
+  color: var(--red);
+}
+
+.modifier-breakdown {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+/* Game over panel */
+.game-over-panel {
+  align-items: center;
+  text-align: center;
+  background: var(--card-bg);
+}
+
+.game-over-panel::before {
+  content: "🏆  World Series 🏆";
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.game-over-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.game-over-score {
+  font-family: var(--font-card);
+  font-size: 1.05rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.game-over-winner {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-field);
+}
+
+/* ▪▪ Play Log ◇ old scorecard style ◇ */
+.play-log {
+  background: var(--navy);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,.03) 28px, rgba(255,255,255,.03) 29px
+    );
+  border-top: 3px solid var(--gold);
+  flex-shrink: 0;
+  max-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.play-log-header {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--gold-light);
+  padding: 5px 14px 4px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+
+.log-entries {
+  overflow-y: auto;
+  padding: 4px 14px 8px;
+  flex: 1;
+}
+
+.log-entry {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  color: rgba(242,232,204,.65);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.45;
+}
+
+.log-entry:first-child {
+  color: var(--chalk);
+  font-weight: 700;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+  .game-main  {
+    grid-template-columns: 160px minmax(0, 1fr) 280px 160px;
+  }
+  .game-right {
+    width: 280px;
+  }
+}
+
+@media (max-width: 960px) {
+  .draft-layout {
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
+  }
+  .game-main    {
+    grid-template-columns: 140px minmax(0, 1fr) 260px 140px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  .gr-name      {
+    font-size: .68rem;
+  }
+}
+
+@media (max-width: 780px) {
+  .game-roster  {
+    display: none;
+  }
+  .game-main    {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  /* Drop to single column cards on narrower screens */
+  .draft-pool-panel .player-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .pool-layout    {
+    grid-template-columns: 1fr;
+  }
+  .draft-layout   {
+    grid-template-columns: 1fr;
+  }
+  .lineup-panels  {
+    grid-template-columns: 1fr;
+  }
+  .lineup-columns {
+    grid-template-columns: 1fr;
+  }
+  .game-main      {
+    grid-template-columns: 1fr;
+  }
+}
+ze: .6rem;
+  white-space: nowrap;
+}
+
+.player-info { flex: 1; min-width: 0; }
+
+.player-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.player-name {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--navy);
+  margin: 0;
+  font-weight: 700;
+}
+
+.player-bats { font-family: var(--font-ui); font-size: .7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+
+.player-pos {
+  font-family: var(--font-ui);
+  font-size: .68rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--gray-200);
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.player-team {
+  font-family: var(--font-card);
+  font-size: .7rem;
+  color: var(--text-muted);
+}
+
+/* Scores or values */
+.scores {
+  display: flex;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 0 1 auto;
+}
+
+.score-label {
+  font-family: var(--font-ui);
+  font-size: .58rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.score-value {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-value.positive {
+  color: var(--green-field);
+  font-weight: 900;
+}
+
+.score-value.negative {
+  color: var(--red);
+  font-weight: 900;
+}
+
+.score.total .score-value {
+  font-size: 1.25rem;
+}
+
+/* Position chips */
+.position-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: .6rem;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-right: 4px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.position-chip.filled {
+  background: var(--green-field);
+}
+
+.position-chip.pending {
+  background: var(--gray-400);
+  color: var(--white);
+}
+
+/* Position slot grid (for showing all positions) */
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.position {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background: var(--parchment-mid);
+  color: var(--text-muted);
+  border: 1px solid var(--parchment-dark);
+}
+
+.position.filled {
+  background: var(--green-field);
+  color: var(--chalk);
+  border-color: var(--green-field);
+}
+
+.position.current {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+  font-weight: 900;
+}
+
+/* Modifier section */
+.modifier-section {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--parchment-dark);
+}
+
+.mod-category {
+  font-family: var(--font-ui);
+  font-size: .62rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+
+.modifier-row {
+  font-family: var(--font-card);
+  font-size: .8rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: var(--text-muted);
+  gap: 8px;
+}
+
+.modifier-row strong {
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+}
+
+.mod-pos {
+  color: var(--green-field);
+}
+
+.mod-neg {
+  color: var(--red);
+}
+
+.modifier-breakdown {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+/* Game over panel */
+.game-over-panel {
+  align-items: center;
+  text-align: center;
+  background: var(--card-bg);
+}
+
+.game-over-panel::before {
+  content: "🏆  World Series 🏆";
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.game-over-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.game-over-score {
+  font-family: var(--font-card);
+  font-size: 1.05rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.game-over-winner {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-field);
+}
+
+/* ▪▪ Play Log ◇ old scorecard style ◇ */
+.play-log {
+  background: var(--navy);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,.03) 28px, rgba(255,255,255,.03) 29px
+    );
+  border-top: 3px solid var(--gold);
+  flex-shrink: 0;
+  max-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.play-log-header {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--gold-light);
+  padding: 5px 14px 4px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+
+.log-entries {
+  overflow-y: auto;
+  padding: 4px 14px 8px;
+  flex: 1;
+}
+
+.log-entry {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  color: rgba(242,232,204,.65);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.45;
+}
+
+.log-entry:first-child {
+  color: var(--chalk);
+  font-weight: 700;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+  .game-main  {
+    grid-template-columns: 160px minmax(0, 1fr) 280px 160px;
+  }
+  .game-right {
+    width: 280px;
+  }
+}
+
+@media (max-width: 960px) {
+  .draft-layout {
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
+  }
+  .game-main    {
+    grid-template-columns: 140px minmax(0, 1fr) 260px 140px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  .gr-name      {
+    font-size: .68rem;
+  }
+}
+
+@media (max-width: 780px) {
+  .game-roster  {
+    display: none;
+  }
+  .game-main    {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  /* Drop to single column cards on narrower screens */
+  .draft-pool-panel .player-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .pool-layout    { grid-template-columns: 1fr; }
+  .draft-layout   { grid-template-columns: 1fr; }
+  .lineup-panels  { grid-template-columns: 1fr; }
+  .lineup-columns { grid-template-columns: 1fr; }
+  .game-main      { grid-template-columns: 1fr; }
+}
+terings with the window. */
+.game-main {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 280px 160px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.roster {
+  width: 160px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--parchment-dark);
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.roster-header {
+  font-family: var(--font-display);
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--gold);
+}
+
+.gr-elem { padding: 8px 0; border-bottom: 1px solid var(--parch-dark); }
+.gr-name { font-size: .82rem; font-weight: 700; font-family: 
+function() {
+  content: attr(name);
+}
+
+.gr-pos { color: var(--sea-green); }
+.gr-score { font-weight: 700; font-family: var(--font-display); }
+.gr-pos strong { color: var(--green-field); }
+.gr-neg { color: var(--red); }
+
+.roster-needs {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+  background: var(--parchment-mid);
+  border-radius: 3px;
+  padding: 7px;
+  margin-top: auto;
+  line-height: 1.6;
+}
+.gr-needs strong { color: var(--navy); font-family: var(--font-ui); }
+
+.need-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: .62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin: 2px 2px 0 0;
+}
+.need-chip.met { background: var(--green-field); }
+
+.player-card {
+  font-family: var(--font-card);
+  font-size: .88rem;
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--parchment-dark);
+  box-shadow: var(--shadow-inset);
+}
+.modifier-row strong {
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+}
+
+.mod-pos {
+  color: var(--green-field);
+}
+
+.mod-neg {
+  color: var(--red);
+}
+
+.modifier-breakdown {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+/* Game over panel */
+.game-over-panel {
+  align-items: center;
+  text-align: center;
+  background: var(--card-bg);
+}
+
+.game-over-panel::before {
+  content: "🏆  World Series 🏆";
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.game-over-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.game-over-score {
+  font-family: var(--font-card);
+  font-size: 1.05rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.game-over-winner {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-field);
+}
+
+/* ▪▪ Play Log ◇ old scorecard style ◇ */
+.play-log {
+  background: var(--navy);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,.03) 28px, rgba(255,255,255,.03) 29px
+    );
+  border-top: 3px solid var(--gold);
+  flex-shrink: 0;
+  max-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.play-log-header {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--gold-light);
+  padding: 5px 14px 4px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+
+.log-entries {
+  overflow-y: auto;
+  padding: 4px 14px 8px;
+  flex: 1;
+}
+
+.log-entry {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  color: rgba(242,232,204,.65);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.45;
+}
+
+.log-entry:first-child {
+  color: var(--chalk);
+  font-weight: 700;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   GRID LAYOUTS – Pool, Draft, Lineup
+════════════════════════════════════════════════════════════════════════════════ */
+
+.pool-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  flex: 1;
+  min-height: 0;  /* allow flex child to shrink below content height */
+  overflow: hidden;  /* constrain grid height so panels scroll via overflow-y: auto */
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.draft-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr) 210px;
+  flex: 1;
+  min-height: 0;    /* allow flex child to shrink below content height */
+  overflow: hidden;  /* constrain grid height so panels scroll via overflow-y: auto */
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Team panels */
+.team-panel {
+  min-width: 0;
+  background: var(--card-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.team-panel--left  { border-right: 1px solid var(--parchment-dark); box-shadow: 2px 0 6px rgba(0,0,0,.08); }
+.team-panel--right { border-left:  1px solid var(--parchment-dark); box-shadow:-2px 0 6px rgba(0,0,0,.08); }
+
+.team-panel.active-turn {
+  background: #fffbe8;
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+
+.team-panel-header {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--gold);
+  text-align: center;
+}
+
+.team-panel-header .pick-indicator {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-top: 3px;
+}
+
+.pick-indicator.your-turn { color: var(--red); }
+.pick-indicator.waiting   { color: var(--gray-400); }
+
+.roster-section h3 {
+  font-family: var(--font-ui);
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.roster-list { list-style: none; display: flex; flex-direction: column; gap: 3px; padding: 0; }
+
+.roster-slot {
+  font-family: var(--font-card);
+  font-size: .76rem;
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: var(--parchment-mid);
+  color: var(--text-muted);
+  border: 1px dashed var(--parchment-dark);
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.roster-slot.filled {
+  background: var(--chalk);
+  border: 1px solid var(--parchment-dark);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.slot-badges { display: flex; gap: 4px; align-items: center; margin-left: 4px; }
+
+.roster-needs {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+  background: var(--parchment-mid);
+  border-radius: 3px;
+  padding: 7px;
+  margin-top: auto;
+  line-height: 1.6;
+}
+.roster-needs strong { color: var(--navy); font-family: var(--font-ui); }
+
+.need-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: .62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin: 2px 2px 0 0;
+}
+.need-chip.met { background: var(--green-field); }
+
+/* Draft pool center */
+.draft-pool-panel {
+  min-width: 0;
+  padding: 14px 24px 14px 14px;  /* extra right padding protects content at right edge */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2-column card grid in the draft pool */
+.draft-pool-panel .player-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  align-items: start;
+}
+
+/* Pick bar and empty state always span both columns */
+.draft-pool-panel .player-list .draft-pick-bar,
+.draft-pool-panel .player-list .empty-state {
+  grid-column: 1 / -1;
+}
+
+.draft-pool-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.draft-pool-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.draft-pool-header h2 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 700;
+  margin: 0;
+}
+
+.draft-pick-bar {
+  background: var(--navy);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-card);
+  font-size: .88rem;
+  color: var(--chalk);
+  text-align: center;
+}
+
+.draft-pick-bar.your-pick {
+  background: var(--red);
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════
+   LINEUP PHASE  
+═══════════════════════════════════════════════════════════════════════════════════ */
+
+.phase-lineup {
+  background: var(--parchment);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0, transparent 28px,
+      rgba(24,36,74,.025) 28px, rgba(24,36,74,.025) 29px
+    ),
+    var(--parchment);
+}
+
+.lineup-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 260px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Lineup panels (team lineups) */
+.lineup-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+.lineup-panel {
+  min-width: 0;
+  background: white;
+  border: 1px solid var(--parchment-dark);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.lineup-panel-header {
+  font-family: var(--font-display);
+  font-size: .9rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+/* Lineup columns (batting order positions) */
+.lineup-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+.lineup-column {
+  min-width: 0;
+  background: white;
+  border: 1px solid var(--parchment-dark);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.lineup-column-header {
+  font-family: var(--font-display);
+  font-size: .88rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+.lineup-position {
+  padding: 8px;
+  background: var(--parchment-mid);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  border: 1px dashed var(--parchment-dark);
+  color: var(--text-muted);
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-card);
+  font-size: .7rem;
+}
+
+.lineup-position.filled {
+  background: var(--chalk);
+  border: 1px solid var(--parchment-dark);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.lineup-position-name {
+  font-family: var(--font-display);
+  font-size: .9rem;
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════════
+   GAME PHASE
+═══════════════════════════════════════════════════════════════════════════════════ */
+
+.phase-game {
+  background: linear-gradient(45deg, var(--green-dark) 25%, var(--green-mow) 25%, var(--green-mow) 50%, var(--green-dark) 50%, var(--green-dark) 75%, var(--green-mow) 75%, var(--green-mow)100%);
+  background-size: 56px 56px;
+  background-position: 0 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.game-header {
+  background: linear-gradient(90deg, var(--navy), var(--navy-light));
+  border-bottom: 3px solid var(--gold);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.game-header h2 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--chalk);
+  margin: 0;
+  font-weight: 700;
+}
+
+.game-header-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  font-size: .75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.game-main {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 280px 160px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.game-right {
+  width: 280px;
+  background: var(--card-bg);
+  border-left: 1px solid var(--parchment-dark);
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-center {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  background: linear-gradient(180deg, transparent 0, transparent calc(50% - 1px), rgba(0,0,0,.02) calc(50% - 1px), rgba(0,0,0,.02) 50%, transparent 50%, transparent 100%);
+  background-size: auto 2px;
+}
+
+/* At-bat card */
+.at-bat {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--parchment-dark);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-card);
+  font-size: .8rem;
+}
+
+.at-bat-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  background: var(--parchment-mid);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--parchment-dark);
+}
+
+.at-bat-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.at-bat-result {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.at-bat-result.success {
+  color: var(--green-field);
+}
+
+.at-bat-result.fail {
+  color: var(--red);
+}
+
+.at-bat-modifiers {
+  font-size: .7rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.game-center-end {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Score display (top right) */
+.game-scoreboard {
+  min-width: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--parchment-dark);
+}
+
+.game-scoreboard-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  margin-bottom: 4px;
+  font-family: var(--font-card);
+  font-size: .75rem;
+  color: var(--text-muted);
+}
+
+.game-scoreboard-row strong {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* Mow stripe effect (alternating background) */
+.mow-stripe {
+  background: linear-gradient(90deg, transparent 0, transparent 28px, rgba(0,0,0,.02) 28px, rgba(0,0,0,.02) 29px);
+  background-repeat: repeat-x;
+  background-size: 29px 100%;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+  .game-main  {
+    grid-template-columns: 160px minmax(0, 1fr) 280px 160px;
+  }
+  .game-right {
+    width: 280px;
+  }
+}
+
+@media (max-width: 960px) {
+  .draft-layout {
+    grid-template-columns: 180px minmax(0, 1fr) 180px;
+  }
+  .game-main    {
+    grid-template-columns: 140px minmax(0, 1fr) 260px 140px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  .gr-name      {
+    font-size: .68rem;
+  }
+}
+
+@media (max-width: 780px) {
+  .game-roster  {
+    display: none;
+  }
+  .game-main    {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+  .game-right   {
+    width: 260px;
+  }
+  /* Drop to single column cards on narrower screens */
+  .draft-pool-panel .player-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .pool-layout    { grid-template-columns: 1fr; }
+  .draft-layout   { grid-template-columns: 1fr; }
+  .lineup-panels  { grid-template-columns: 1fr; }
+  .lineup-columns { grid-template-columns: 1fr; }
+  .game-main      { grid-template-columns: 1fr; }
+}
+.player-card {
+  font-family: var(--font-card);
+  font-size: .88rem;
+  background: var(--card-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--parchment-dark);
+  box-shadow: var(--shadow-inset);
+}
+.modifier-row strong {
+  font-size: 1.1rem;
+  font-family: var(--font-display);
+}
+
+.mod-pos {
+  color: var(--green-field);
+}
+
+.mod-neg {
+  color: var(--red);
+}
+
+.modifier-breakdown {
+  font-family: var(--font-card);
+  font-size: .72rem;
+  color: var(--text-muted);
+}
+
+/* Game over panel */
+.game-over-panel {
+  align-items: center;
+  text-align: center;
+  background: var(--card-bg);
+}
+
+.game-over-panel::before {
+  content: "🏆  World Series 🏆";
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.game-over-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.game-over-score {
+  font-family: var(--font-card);
+  font-size: 1.05rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.game-over-winner {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-field);
+}
